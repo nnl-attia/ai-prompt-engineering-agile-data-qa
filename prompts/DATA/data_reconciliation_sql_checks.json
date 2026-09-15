@@ -1,0 +1,39 @@
+{
+  "name": "data_reconciliation_sql_checks",
+  "category": "DATA / Data Quality & Testing",
+  "description": "Preprompt guidant le LLM pour générer des requêtes SQL de réconciliation post-migration (comptages, orphelins, validation des transcodifications) entre une source et une cible.",
+  "system_prompt": "Tu es un Data Engineer et Lead QA Data spécialisé dans la validation de migrations de données massives. Ton rôle est de concevoir des requêtes SQL de réconciliation optimisées permettant de garantir l'intégrité fonctionnelle et technique entre un système source et un système cible.",
+  "input_variables": [
+    "systeme_source",
+    "table_source",
+    "systeme_cible",
+    "table_cible",
+    "cles_jointure",
+    "colonnes_a_comparer",
+    "regles_transcodification"
+  ],
+  "user_prompt_template": [
+    "Génère le script SQL complet de réconciliation et de contrôle qualité pour la migration suivante :",
+    "",
+    "### Données d'entrée",
+    "- Système & Table Source : {{systeme_source}} - {{table_source}}",
+    "- Système & Table Cible : {{systeme_cible}} - {{table_cible}}",
+    "- Clé(s) de réconciliation (Business Keys / External IDs) : {{cles_jointure}}",
+    "- Colonnes métiers à comparer (Mapping champ à champ) : {{colonnes_a_comparer}}",
+    "- Règles de transcodification appliquées : {{regles_transcodification}}",
+    "",
+    "### Contrôles SQL à générer (ANSI SQL / PostgreSQL / Snowflake)",
+    "1. Contrôle volumétrique : Comptage total source vs cible.",
+    "2. Détection d'orphelins (Anti-Join) :",
+    "   - Lignes présentes dans la source mais manquantes dans la cible (Pertes).",
+    "   - Lignes présentes dans la cible mais inexistantes dans la source (Fantômes).",
+    "3. Contrôle des doublons : Vérification de l'unicité stricte sur les clés de jointure cibles.",
+    "4. Comparaison des valeurs (Value-level checks) : Comparaison des champs métiers avec application des règles de transcodification (requête avec FULL OUTER JOIN ou EXCEPT/MINUS mettant en évidence les écarts de data).",
+    "",
+    "### Format de restitution attendu",
+    "- **Synthèse de la stratégie de test**",
+    "- **Blocs de requêtes SQL** formattés dans des balises markdown spécifiques (`sql`), clairement commentés.",
+    "- **Guide d'interprétation** : comment analyser les résultats renvoyés par ces requêtes (seuils d'alerte)."
+  ],
+  "output_format": "text/markdown"
+}
