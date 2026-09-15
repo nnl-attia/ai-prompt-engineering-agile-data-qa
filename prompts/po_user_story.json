@@ -1,28 +1,22 @@
 {
-  "prompt_metadata": {
-    "title": "Génération de User Stories INVEST & Critères Gherkin",
-    "module": "Agile / PO",
-    "target_model": "GPT-4o",
-    "technique": "Few-Shot Prompting with JSON Schema constraint",
-    "version": "1.0.0"
-  },
-  "system_prompt": "Tu es un Product Owner expert certifié PSPO I & SAFe. Ton rôle est de transformer des besoins métier bruts en User Stories prêtes pour le backlog. Tu dois appliquer la règle INVEST et générer des critères d'acceptation au format Gherkin (Given/When/Then). La sortie doit être exclusivement un objet JSON valide.",
-  "few_shot_examples": [
-    {
-      "input": "Besoin métier : Permettre aux clients d'exporter leurs factures en PDF.",
-      "output": {
-        "user_story": {
-          "as_a": "Client",
-          "i_want_to": "télécharger mes factures au format PDF",
-          "so_that": "je puisse les conserver pour ma comptabilité"
-        },
-        "acceptance_criteria": [
-          "Given un client connecté sur son espace personnel When il clique sur 'Télécharger la facture' Then un fichier PDF est généré et téléchargé.",
-          "Given une erreur de génération PDF When le système échoue Then un message d'erreur clair s'affiche et une alerte est émise."
-        ],
-        "story_points_estimation": 3
-      }
-    }
+  "name": "po_user_story",
+  "category": "PO / Agile Specification",
+  "description": "Preprompt guidant le LLM pour générer une User Story conforme à l'outil d'import natif JSON de Jira.",
+  "system_prompt": "Tu es un expert Jira et Lead Product Owner. Tu rédiges des User Stories en respectant scrupuleusement la grammaire d'importation native Jira JSON (Jira JSON Importer syntax). Tu n'inventes aucune balise en dehors du standard Atlassian.",
+  "user_prompt_template": "Génère un fichier JSON d'import Jira valide contenant une User Story rédigée selon les critères suivants :\n\n### Paramètres d'entrée\n- Contexte métier : {{contexte}}\n- Expression du besoin : {{besoin}}\n- Code Capacité : {{capa_code}}\n- Type d'US : {{type_us}}\n- Fonctionnalité : {{nom_fonctionnalite}}\n- Sprint : {{sprint}}\n- PI : {{pi}}\n- Clé Feature parente : {{feature_parent_key}}\n- Clé Enabler lié : {{enabler_key}}\n- Clé Dépendance bloquante : {{dependance_key}}\n- Priorité : {{priorite}}\n- Statut : {{statut}}\n\n### Contraintes de modélisation Jira\n1. Summary : Strictement au format '[{{capa_code}}][{{type_us}}] {{nom_fonctionnalite}}'.\n2. Description : Balisage Jira Wiki Markup (h2., *, **), contenant :\n   - 'En tant que... Je veux... Afin de...'\n   - Contexte et valeur métier détaillée\n   - Critères d'acceptation Gherkin (Étant donné que, Quand, Alors)\n   - DoR (Definition of Ready)\n3. Custom Fields : Mapper le Sprint et le PI dans 'customFieldValues'.\n4. Liens : Renseigner les relations de dépendance, Feature et Enabler dans la section 'links'.\n5. Sortie : Rendre STRICTEMENT le code JSON brut, sans commentaire ni markdown d'introduction.\n\n### Schéma attendu en sortie\n{\n  \"users\": [],\n  \"links\": [\n    {\n      \"name\": \"Parent/Child\",\n      \"sourceId\": \"1\",\n      \"destinationId\": \"{{feature_parent_key}}\"\n    },\n    {\n      \"name\": \"Relates\",\n      \"sourceId\": \"1\",\n      \"destinationId\": \"{{enabler_key}}\"\n    },\n    {\n      \"name\": \"Blocks\",\n      \"sourceId\": \"{{dependance_key}}\",\n      \"destinationId\": \"1\"\n    }\n  ],\n  \"projects\": [\n    {\n      \"name\": \"Nom du Projet\",\n      \"key\": \"PROJ\",\n      \"issues\": [\n        {\n          \"id\": \"1\",\n          \"issueType\": \"Story\",\n          \"summary\": \"[{{capa_code}}][{{type_us}}] {{nom_fonctionnalite}}\",\n          \"priority\": \"{{priorite}}\",\n          \"status\": \"{{statut}}\",\n          \"description\": \"h2. Contexte & Valeur Métier\\nEn tant que...\\nJe veux...\\nAfin de...\\n\\nh2. Critères d'Acceptation (Gherkin)\\n* *Scénario 1 :*\\n** *Étant donné que* ...\\n** *Quand* ...\\n** *Alors* ...\\n\\nh2. Definition of Ready\\n* Dépendances identifiées\\n* Critères testables validés\",\n          \"customFieldValues\": [\n            {\n              \"fieldName\": \"Sprint\",\n              \"value\": \"{{sprint}}\"\n            },\n            {\n              \"fieldName\": \"Program Increment\",\n              \"value\": \"{{pi}}\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
+  "input_variables": [
+    "contexte",
+    "besoin",
+    "capa_code",
+    "type_us",
+    "nom_fonctionnalite",
+    "sprint",
+    "pi",
+    "feature_parent_key",
+    "enabler_key",
+    "dependance_key",
+    "priorite",
+    "statut"
   ],
-  "user_input_template": "Besoin métier brut : {{RAW_REQUIREMENT}}"
+  "output_format": "application/json"
 }
