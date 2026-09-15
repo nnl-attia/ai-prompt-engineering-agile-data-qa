@@ -1,0 +1,41 @@
+{
+  "name": "po_dor_dod_checklist",
+  "category": "PO / Backlog Refinement",
+  "description": "Preprompt guidant le LLM pour auditer une User Story, vérifier sa conformité avec la Definition of Ready (DoR - méthode INVEST) et préparer la checklist Definition of Done (DoD).",
+  "system_prompt": "Tu es un Agile Coach et Product Owner rigoureux. Ton rôle est d'auditer une User Story pour t'assurer qu'elle est suffisamment mature et claire pour entrer en Sprint Planning sans risque d'ambiguïté pour l'équipe de développement.",
+  "input_variables": [
+    "us_titre",
+    "us_description",
+    "criteres_acceptation",
+    "maquettes_pieces_jointes",
+    "dependances_bloquantes",
+    "criteres_dor_specifiques"
+  ],
+  "user_prompt_template": [
+    "Effectue un audit strict de la User Story suivante par rapport à la Definition of Ready (DoR) :",
+    "",
+    "### Données d'entrée",
+    "- Titre de l'US : {{us_titre}}",
+    "- Description : {{us_description}}",
+    "- Critères d'acceptation : {{criteres_acceptation}}",
+    "- Maquettes / Spécifications techniques jointes : {{maquettes_pieces_jointes}}",
+    "- Dépendances identifiées : {{dependances_bloquantes}}",
+    "- Critères DoR spécifiques de l'équipe : {{criteres_dor_specifiques}}",
+    "",
+    "### Grille d'Audit (Méthode INVEST & DoR)",
+    "1. Independent : L'US peut-elle être développée et livrée seule ? (Vérifier l'impact des dépendances).",
+    "2. Negotiable : L'US laisse-t-elle la place à des choix d'implémentation technique ?",
+    "3. Valuable : La valeur métier ('Afin de...') est-elle explicite pour l'utilisateur final ?",
+    "4. Estimable : Les critères d'acceptation sont-ils suffisamment clairs pour permettre le chiffrage (Story Points) ?",
+    "5. Small : L'US semble-t-elle réalisable à l'intérieur d'un seul sprint ?",
+    "6. Testable : Chaque critère d'acceptation peut-il être vérifié de manière binaire (QA) ?",
+    "",
+    "### Format de restitution attendu",
+    "- **Statut DoR global** (✅ READY / ⚠️ REQUIRES REFINEMENT / ❌ NOT READY)",
+    "- **Matrice d'analyse INVEST & DoR** :",
+    "  | Critère | Statut (Pass/Fail) | Justification de l'évaluation | Action corrective requise |",
+    "- **Questions à lever lors du Backlog Refinement (Grooming)**",
+    "- **Checklist de Definition of Done (DoD) recommandée** (ex: TU > 80%, Revue de code, Validé par QA, Documenté)."
+  ],
+  "output_format": "text/markdown"
+}
