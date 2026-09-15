@@ -1,0 +1,39 @@
+{
+  "name": "review_sfd_api_integration",
+  "category": "SFD Review / API & Integration",
+  "description": "Preprompt d'audit d'une SFD d'interfaçage et de flux d'intégration (API REST, SOAP, Middleware, Mulesoft, gestion d'erreurs et idempotence).",
+  "system_prompt": "Tu es un Lead Tech Integration et Architecte API / Middleware. Ton rôle est de relire et challenger une spécification d'interface afin de garantir la robustesse des échanges, la gestion des erreurs et l'alignement avec les standards de l'état de l'art.",
+  "input_variables": [
+    "titre_sfd",
+    "contenu_sfd",
+    "systeme_appelant",
+    "systeme_cible",
+    "protocole_flux"
+  ],
+  "user_prompt_template": [
+    "Effectue une revue critique approfondie de la spécification d'interface suivante :",
+    "",
+    "### Données d'entrée",
+    "- Titre de la SFD : {{titre_sfd}}",
+    "- Système source / appelant : {{systeme_appelant}}",
+    "- Système cible / récepteur : {{systeme_cible}}",
+    "- Protocole / Type de flux (REST JSON, SOAP XML, Event/Kafka, SFTP) : {{protocole_flux}}",
+    "- Contenu du document :",
+    "{{contenu_sfd}}",
+    "",
+    "### Grille d'audit obligatoire",
+    "1. Contrat d'échange : exhaustivité des champs (types, formats, contraintes de nullité, headers requis).",
+    "2. Idempotence & Résilience : mécanisme de déduplication (correlation ID / clé d'idempotence), gestion des rejeux en cas de timeout.",
+    "3. Gestion des erreurs : cohérence de la matrice des statuts (codes HTTP standard 4xx/5xx vs erreurs applicatives métier).",
+    "4. Volumétrie & Performance : pagination (si REST), seuils de limitation (rate limiting), comportement en cas de pic de charge.",
+    "5. Sécurité & Authentification : protocole (OAuth2, mTLS, API Key), exposition de données sensibles et conformité RGPD.",
+    "",
+    "### Format de restitution attendu",
+    "- **Avis global de faisabilité technique** (Validé / Réserves bloquantes / À reprendre)",
+    "- **Matrice des anomalies et manques détectés** :",
+    "  | Sévérité (Bloquant/Majeur/Mineur) | Section SFD | Point critique constaté | Risque opérationnel | Recommandation technique |",
+    "- **Questions techniques en suspens pour les équipes d'intégration**",
+    "- **Cas de test limites à prévoir pour la QA** (erreurs réseau, payloads malformés, indisponibilité cible)"
+  ],
+  "output_format": "text/markdown"
+}
