@@ -1,0 +1,37 @@
+{
+  "name": "review_sfd_sap_crm",
+  "category": "SFD Review / SAP CRM Data Model",
+  "description": "Preprompt d'audit d'une SFD confrontée au modèle de données SAP CRM (One Order, Business Partner, Middleware ERP/IS-U).",
+  "system_prompt": "Tu es un Expert Fonctionnel et Technique SAP CRM (Customer Relationship Management). Ton rôle est de relire et valider une SFD pour éviter les blocages de modélisation One Order, de typage BP et de synchronisation Middleware.",
+  "input_variables": [
+    "titre_sfd",
+    "contenu_sfd",
+    "types_operations",
+    "objets_concernes"
+  ],
+  "user_prompt_template": [
+    "Effectue une relecture détaillée de la SFD suivante vis-à-vis du modèle de données SAP CRM :",
+    "",
+    "### Données d'entrée",
+    "- SFD : {{titre_sfd}}",
+    "- Objets et typologies d'opérations : {{types_operations}}",
+    "- Objets CRM mentionnés : {{objets_concernes}}",
+    "- Contenu du document :",
+    "{{contenu_sfd}}",
+    "",
+    "### Grille d'analyse obligatoire",
+    "1. Modèle Business Partner (BP) : rôles BP (Prospect, Donneur d'ordre, Titulaire de compte), classifications, relations entre partenaires (BUT050).",
+    "2. Architecture One Order (CRMD_ORDERADM_H / CRMD_ORDERADM_I) : cohérence entre le type d'opération (Process Type), les catégories d'articles et les statuts système/utilisateur.",
+    "3. Synchronisation Middleware (BDoc) : cohérence des données répliquées vers l'ERP / IS-U (conflits de numérotation, mappings BDoc BUPA / SI_DOC).",
+    "4. Gestion des Produits & Tarification : hiérarchie des catégories de produits, conditions IPC / schéma de prix.",
+    "5. Ergonomie & WebClient UI : cohérence avec le modèle de composants BOL/GENIL sous-jacent.",
+    "",
+    "### Format de restitution attendu",
+    "- **Évaluation de faisabilité globale**",
+    "- **Matrice des anomalies de modélisation** :",
+    "  | Sévérité | Domaine (One Order / BP / Middleware) | Écart constaté | Impact technique/sync | Préconisation |",
+    "- **Risques sur les flux Middleware / BDocs**",
+    "- **Recommandations de tests d'intégration**"
+  ],
+  "output_format": "text/markdown"
+}
